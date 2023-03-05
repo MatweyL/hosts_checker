@@ -53,16 +53,28 @@ def resolve_domain(domain_name: str) -> ResolvingAnswer:
 
 def ping_server(host: str, port: int = None, timeout: float = 2):
     if not port:
-        result = ping(host)  # Runtime error: RuntimeError: Cannot resolve address "yandekx1.ru", try verify your DNS or host file
-        print(result)
+        response = ping(host, count=1)
+        success = response.success()
+        if response.success():
+            return PingAnswer(success=success,
+                              message='ok' if success else 'request timed out',
+                              host=host,
+                              port=-1,
+                              rtt=response.rtt_avg,
+                              port_status='???',
+                              timestamp=datetime.datetime.now())
     else:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.settimeout(timeout)
             start_time = perf_counter()
-            result = sock.connect_ex((host, port))
+            response_code = sock.connect_ex((host, port))
             rtt = perf_counter() - start_time
-            print('rtt', rtt)
-            pprint.pprint(result)
+            if response_code == 0:
+                return PingAnswer(success=True, message='ok', host=host, port=port,
+                                  rtt=rtt, port_status='opened', timestamp=datetime.datetime.now())
+            else:
+                return PingAnswer(success=False, message=f'{response_code}', host=host, port=port,
+                                  rtt=rtt, port_status='not opened', timestamp=datetime.datetime.now())
 
 
 
@@ -84,7 +96,7 @@ def main():
     # else:
     #     print(resolving_answer.message)
 
-    r = ping_server("213.86.34.12", 4500)  # 10049 - port is not valid
+    r = ping_server("yandex.ru", 25)  # 10049 - port is not valid
     print(r)
 
 

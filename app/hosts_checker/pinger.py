@@ -4,24 +4,33 @@ from time import perf_counter
 
 import pythonping
 
-from app.hosts_checker.models import PingAnswer, MessagesEnum, ResolvingAnswer
+from app.core.models import PingAnswer, MessagesEnum, ResolvingAnswer
+from app.logger.loggers import ConsoleLogger
 
 
 def resolve_domain(domain_name: str) -> ResolvingAnswer:
     try:
         domain_info = socket.gethostbyname_ex(domain_name)
-        return ResolvingAnswer(success=True, message=MessagesEnum.DNS_SUCCEED.format(domain_name), hosts=domain_info[2])
+        return ResolvingAnswer(success=True, domain_name=domain_name,
+                               message=MessagesEnum.DNS_SUCCEED.format(domain_name),
+                               hosts=domain_info[2],
+                               timestamp=datetime.datetime.now())
     except socket.gaierror:
-        return ResolvingAnswer(success=False, message=MessagesEnum.DNS_FAILED.format(domain_name))
+        return ResolvingAnswer(success=False, domain_name=domain_name,
+                               message=MessagesEnum.DNS_FAILED.format(domain_name),
+                               timestamp=datetime.datetime.now())
 
 
-def ping(host: str, port: int = None, timeout: float = 2, count: int = 4) -> PingAnswer:
+def ping(host: str, port: int = None, domain_name: str = "???", timeout: float = 2, count: int = 4) -> PingAnswer:
     if not port:
-        return _ping_icmp(host, timeout, count)
-    return _ping_port(host, port, timeout, count)
+        ping_answer = _ping_icmp(host, domain_name, timeout, count)
+    else:
+        ping_answer = _ping_port(host, port, domain_name, timeout, count)
+    ping_answer.domain_name = domain_name
+    return ping_answer
 
 
-def _ping_icmp(host: str, timeout: float = 2, count: int = 4) -> PingAnswer:
+def _ping_icmp(host: str, domain_name: str, timeout: float = 2, count: int = 4) -> PingAnswer:
     rtt = None
     success = False
     try:
@@ -32,10 +41,10 @@ def _ping_icmp(host: str, timeout: float = 2, count: int = 4) -> PingAnswer:
     except OSError:
         message = MessagesEnum.NETWORK_IS_UNAVAILABLE
     return PingAnswer(success=success, message=message, rtt=rtt * 1000, host=host, port=-1,
-                      port_status='???', timestamp=datetime.datetime.now())
+                      port_status='???', timestamp=datetime.datetime.now(), domain_name=domain_name)
 
 
-def _ping_port(host: str, port: int, timeout: float = 2, count: int = 4) -> PingAnswer:
+def _ping_port(host: str, port: int, domain_name: str, timeout: float = 2, count: int = 4) -> PingAnswer:
     successes = 0
     rtt_avg = 0
     error_code = None
@@ -57,9 +66,11 @@ def _ping_port(host: str, port: int, timeout: float = 2, count: int = 4) -> Ping
         message = MessagesEnum.OK if success else error_code
     port_status = MessagesEnum.PORT_OPENED if success else MessagesEnum.PORT_NOT_OPENED
     return PingAnswer(success=success, message=message, rtt=rtt_avg * 1000, host=host, port=port,
-                      port_status=port_status, timestamp=datetime.datetime.now())
+                      port_status=port_status, timestamp=datetime.datetime.now(), domain_name=domain_name)
 
 
 if __name__ == "__main__":
-    r = _ping_port('yandex.ru', 80)
-    print(r)
+    r = ping('yandex.ru', 80, 'yandex.ru')
+    # print(r)
+    logger = ConsoleLogger()
+    logger.log(r)

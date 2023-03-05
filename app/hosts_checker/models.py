@@ -27,8 +27,11 @@ class PingAnswer(BaseAnswer):
     timestamp: datetime
 
 
-class MessagesEnum(enum.Enum):
+class MessagesEnum:
     PORT_OPENED = "opened"
     PORT_NOT_OPENED = "not opened"
     OK = "ok"
     NETWORK_IS_UNAVAILABLE = "network is unavailable"
+    REQUEST_TIMED_OUT = "request timed out"
+    DNS_SUCCEED = "dns successfully resolved {}"
+    DNS_FAILED = "dns failed to resolve {}"

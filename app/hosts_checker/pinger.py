@@ -1,11 +1,13 @@
 import datetime
+import os
 import socket
 from time import perf_counter
 
 import pythonping
 
 from app.core.models import PingAnswer, MessagesEnum, ResolvingAnswer
-from app.logger.loggers import ConsoleLogger
+from app.logger.loggers import ConsoleLogger, FileLogger
+from app.utils.base import get_project_root
 
 
 def resolve_domain(domain_name: str) -> ResolvingAnswer:
@@ -63,14 +65,16 @@ def _ping_port(host: str, port: int, domain_name: str, timeout: float = 2, count
     if error_code == 10065:
         message = MessagesEnum.NETWORK_IS_UNAVAILABLE
     else:
-        message = MessagesEnum.OK if success else error_code
+        message = MessagesEnum.OK if success else f'error: {error_code}'
     port_status = MessagesEnum.PORT_OPENED if success else MessagesEnum.PORT_NOT_OPENED
     return PingAnswer(success=success, message=message, rtt=rtt_avg * 1000, host=host, port=port,
                       port_status=port_status, timestamp=datetime.datetime.now(), domain_name=domain_name)
 
 
 if __name__ == "__main__":
-    r = ping('yandex.ru', 80, 'yandex.ru')
-    # print(r)
-    logger = ConsoleLogger()
+    logger = FileLogger(os.path.join(get_project_root(), "logs"))
+    r = ping('5.255.255.115', 80, 'yandex.ru', count=1)
+    logger.log(r)
+    r = resolve_domain("yandex.ru")
+
     logger.log(r)

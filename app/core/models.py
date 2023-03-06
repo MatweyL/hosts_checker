@@ -16,7 +16,7 @@ class BaseAnswer:
         return self.__dict__
 
     def to_string(self):
-        return f"{self.timestamp:26} | {self.success} | {self.domain_name:16} | {self.message:32}"
+        return f"{self.timestamp} | {int(self.success)} | {self.domain_name:16} | {self.message:32}"
 
 
 @dataclass
@@ -64,3 +64,8 @@ class HostInfo:
             self.type = HostType.IP
         else:
             self.type = HostType.DOMAIN_NAME
+
+
+@dataclass
+class HTTPResponse:
+    status_code: int

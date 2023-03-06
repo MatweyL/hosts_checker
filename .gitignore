@@ -8,4 +8,5 @@ __pycache__/
 *.txt
 *.json
 *.db
+*.log
 !requirements.txt

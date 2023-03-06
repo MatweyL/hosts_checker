@@ -1,0 +1,8 @@
+Host;Ports
+localhost;
+yandex.ru;443,80
+heh.ru;8000
+not-available-host.com;
+192.168.32.2;
+habr.ru;443,80,3000
+vk.com;

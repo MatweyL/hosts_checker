@@ -29,6 +29,12 @@ class HostsChecker:
         for notifiers in self.notifiers:
             notifiers.notify(message)
 
+    def ping(self, host: str, port: int = None, domain_name: str = "???"):
+        ping_answer = ping(host, port, domain_name)
+        self.log(ping_answer)
+        if not ping_answer.success:
+            self.notify(ping_answer)
+
     def start(self):
         while True:
             for host_info in self.hosts_info:
@@ -42,11 +48,10 @@ class HostsChecker:
                 else:
                     hosts = [host_info.host]
                 ports = host_info.ports if host_info.ports else [None]
+
                 domain_name = host_info.host if host_info.type == HostType.DOMAIN_NAME else "???"
                 for host in hosts:
                     for port in ports:
-                        ping_answer = ping(host, port, domain_name)
-                        self.log(ping_answer)
-                        if not ping_answer.success:
-                            self.notify(ping_answer)
+                        self.ping(host, port, domain_name)
+
             sleep(self.timeout)

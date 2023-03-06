@@ -16,8 +16,6 @@ class FileLogger(Logger):
     def __init__(self, logs_path: str):
         self.logs_dir_path: str = logs_path
         self.log_file = None
-        self.messages: List[BaseAnswer] = []
-        self.messages_max_len = 10
         self.log_file_max_size = 1024 * 1024 * 100  # 100MB
         self._setup()
 
@@ -40,11 +38,8 @@ class FileLogger(Logger):
         self.log_file = os.path.join(self.logs_dir_path, f'{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.log')
 
     def log(self, message: BaseAnswer):
-        self.messages.append(message)
-        if len(self.messages) > self.messages_max_len:
-            with open(self.log_file, "a") as log_file:
-                for message in self.messages:
-                    log_file.write(f'{message.to_string()}\n')
+        with open(self.log_file, "a") as log_file:
+            log_file.write(f'{message.to_string()}\n')
         self._check_log_file_size()
 
 

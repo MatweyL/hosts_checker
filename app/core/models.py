@@ -35,7 +35,7 @@ class PingAnswer(BaseAnswer):
     def to_string(self):
         base_str = super(PingAnswer, self).to_string()
 
-        return f'{base_str} | {self.host} | {self.port} | {self.rtt} | {self.port_status}'
+        return f'{base_str} | {self.host:15} | {self.port:6} | {round(self.rtt, 2):8} | {self.port_status}'
 
 
 class MessagesEnum:
@@ -56,7 +56,7 @@ class HostType(enum.Enum):
 @dataclass
 class HostInfo:
     host: str
-    ports: List = field(default=list)
+    ports: List = field(default_factory=list)
     type: HostType = None
 
     def __post_init__(self):

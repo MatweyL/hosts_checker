@@ -20,6 +20,5 @@
     "ping_count": 1,
     "ping_timeout": 2,
     "sleep_timeout": 0
-  },
-  "hosts_file_path": "D:\\hosts_checker\\hosts.csv"
+  }
 }

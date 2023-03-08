@@ -20,7 +20,7 @@ class TelegramNotifier(Notifier):
                                                                        'text': f'<pre>{message.to_string()}</pre>',
                                                                        'parse_mode': 'html'})
             except (NetworkConnectionError, BaseException) as e:
-                print(f"NetworkConnectionError: cannot send message to bot: {e}")
+                print(f"NetworkConnectionError: cannot send message to bot")
 
 
 class EmailNotifier:

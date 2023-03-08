@@ -42,6 +42,7 @@ def _ping_icmp(host: str, domain_name: str, timeout: float = 2, count: int = 4) 
         rtt = response.rtt_avg
     except OSError:
         message = MessagesEnum.NETWORK_IS_UNAVAILABLE
+        rtt = timeout
     return PingAnswer(success=success, message=message, rtt=rtt * 1000, host=host, port=-1,
                       port_status='???', timestamp=datetime.datetime.now(), domain_name=domain_name)
 

@@ -1,6 +1,7 @@
 from time import sleep
 from typing import List
 
+from app.core.configs import HostsCheckerConfig
 from app.core.models import HostInfo, HostType
 from app.hosts_checker.pinger import resolve_domain, ping
 from app.logger import Logger
@@ -9,9 +10,9 @@ from app.notifier import Notifier
 
 class HostsChecker:
 
-    def __init__(self, hosts_info: List[HostInfo], timeout: float = 0.1):
+    def __init__(self, hosts_info: List[HostInfo], config: HostsCheckerConfig):
         self.hosts_info: List[HostInfo] = hosts_info
-        self.timeout: float = timeout
+        self.config: HostsCheckerConfig = config
         self.loggers: List[Logger] = []
         self.notifiers: List[Notifier] = []
 
@@ -30,7 +31,7 @@ class HostsChecker:
             notifiers.notify(message)
 
     def ping(self, host: str, port: int = None, domain_name: str = "???"):
-        ping_answer = ping(host, port, domain_name)
+        ping_answer = ping(host, port, domain_name, timeout=self.config.ping_timeout, count=self.config.ping_count)
         self.log(ping_answer)
         if not ping_answer.success:
             self.notify(ping_answer)
@@ -53,5 +54,4 @@ class HostsChecker:
                 for host in hosts:
                     for port in ports:
                         self.ping(host, port, domain_name)
-
-            sleep(self.timeout)
+            sleep(self.config.sleep_timeout)

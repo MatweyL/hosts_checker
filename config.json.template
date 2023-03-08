@@ -1,0 +1,25 @@
+{
+  "loggers":  [
+                {
+                  "name": "console"
+                },
+                {
+                  "name": "file",
+                  "logs_dir_path": "D:\\hosts_checker\\logs",
+                  "log_file_max_size": 104857600
+                }
+  ],
+  "notifiers": [
+                {
+                  "name": "telegram",
+                  "bot_token": "1111111:AAAAAAAAAAAAAA",
+                  "known_users": [10000000]
+                }
+  ],
+  "hosts_checker": {
+    "ping_count": 1,
+    "ping_timeout": 2,
+    "sleep_timeout": 0
+  },
+  "hosts_file_path": "D:\\hosts_checker\\hosts.csv"
+}

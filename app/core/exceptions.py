@@ -3,7 +3,8 @@ class NetworkConnectionError(Exception):
 
 
 class NoSuchFileError(FileNotFoundError):
-    pass
+    def __init__(self, file_path: str):
+        super(NoSuchFileError, self).__init__(f"There is no file on path {file_path}")
 
 
 class WrongInputFormatError(Exception):
@@ -32,3 +33,22 @@ class InvalidPortNumberError(WrongInputFormatError):
 class InvalidPortFormatError(WrongInputFormatError):
     def __init__(self, line_number: int, port: str | int):
         super(InvalidPortFormatError, self).__init__(line_number,f"Wrong port format: {port}; port must be integer")
+
+
+class ConfigError(Exception):
+    pass
+
+
+class FieldMissedError(ConfigError):
+    def __init__(self, missed_field: str):
+        super(FieldMissedError, self).__init__(f"field is missed in config: {missed_field}")
+
+
+class UnknownLoggerError(ConfigError):
+    def __init__(self, logger_name: str):
+        super(UnknownLoggerError, self).__init__(f"unknown logger name: {logger_name}")
+
+
+class UnknownNotifierError(ConfigError):
+    def __init__(self, notifier_name: str):
+        super(UnknownNotifierError, self).__init__(f"unknown notifier name: {notifier_name}")

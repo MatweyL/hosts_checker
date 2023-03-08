@@ -14,7 +14,7 @@ def get_hosts_info(file_path: str) -> List[HostInfo]:
         hosts_info_raw = read(file_path)
         return validate(hosts_info_raw)
     except FileNotFoundError:
-        raise NoSuchFileError(f"There is no file on path {file_path}")
+        raise NoSuchFileError(file_path)
 
 
 def read(file_path: str):

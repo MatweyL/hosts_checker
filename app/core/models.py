@@ -16,7 +16,7 @@ class BaseAnswer:
         return self.__dict__
 
     def to_string(self):
-        return f"{self.timestamp} | {int(self.success)} | {self.domain_name:16} | {self.message:32}"
+        return f"{self.timestamp} | {int(self.success)} | {self.domain_name:32} | {self.message:32}"
 
 
 @dataclass

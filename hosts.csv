@@ -1,6 +1,6 @@
 Host;Ports
 localhost;
-yandex.ru;443,80
+yandex.ru;443,8
 heh.ru;8000
 not-available-host.com;
 192.168.32.2;

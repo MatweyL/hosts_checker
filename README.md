@@ -17,3 +17,13 @@
 - **ping_count** (количество посылаемых пакетов)
 - **ping_timeout** (время ожидания)
 - **sleep_timeout** (время паузы между итерациями переопроса всех хостов).
+
+## Пример работы
+
+Вывод в консоль:
+![image](https://user-images.githubusercontent.com/74009572/223718316-6f1d62f4-d1a2-4f6c-b65c-0d1c4f3b7d6f.png)
+
+
+Отправка оповещений об ошибках в Telegram:
+
+![image](https://user-images.githubusercontent.com/74009572/223718486-5e9a1234-f717-4598-96f5-dc9ffb0a5272.png)

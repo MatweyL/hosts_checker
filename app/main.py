@@ -3,10 +3,8 @@ import sys
 
 from app.core.configurator import Configurator
 from app.core.exceptions import WrongInputFormatError, NoSuchFileError, ConfigError
-from app.core.models import HostInfo
 from app.hosts_checker.checker import HostsChecker
 from app.input.parser import get_hosts_info
-from app.logger.loggers import ConsoleLogger, FileLogger
 from app.utils.base import get_project_root
 
 

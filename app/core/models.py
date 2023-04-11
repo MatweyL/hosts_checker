@@ -38,6 +38,10 @@ class PingAnswer(BaseAnswer):
         return f'{base_str} | {self.host:15} | {self.port:6} | {round(self.rtt, 2):8} | {self.port_status}'
 
 
+class SSLCertificateCheckAnswer(BaseAnswer):
+    pass
+
+
 class MessagesEnum:
     PORT_OPENED = "opened"
     PORT_NOT_OPENED = "not opened"
@@ -46,6 +50,11 @@ class MessagesEnum:
     REQUEST_TIMED_OUT = "request timed out"
     DNS_SUCCEED = "resolved"
     DNS_FAILED = "failed to resolve"
+    SSL_CERTIFICATE_WRONG = "INVALID cert"
+    SSL_CERTIFICATE_VALID = "valid cert"
+    _SSL_FAILED = "failed to check SSL certify:"
+    SSL_CLOSED_PORT = f"{_SSL_FAILED} port ({{}}) closed"
+    SSL_NETWORK_IS_UNAVAILABLE = f"{_SSL_FAILED} {NETWORK_IS_UNAVAILABLE}"
 
 
 class HostType(enum.Enum):

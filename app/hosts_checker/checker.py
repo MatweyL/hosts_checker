@@ -3,6 +3,7 @@ from typing import List
 
 from app.core.configs import HostsCheckerConfig
 from app.core.models import HostInfo, HostType
+from app.hosts_checker.certificates_checker import check_certificate
 from app.hosts_checker.pinger import resolve_domain, ping
 from app.logger import Logger
 from app.notifier import Notifier
@@ -54,4 +55,11 @@ class HostsChecker:
                 for host in hosts:
                     for port in ports:
                         self.ping(host, port, domain_name)
+
+                if 443 in ports:
+                    certificate_check_answer = check_certificate(domain_name, 443)
+                    self.log(certificate_check_answer)
+                    if not certificate_check_answer.success:
+                        self.notify(certificate_check_answer)
+
             sleep(self.config.sleep_timeout)
